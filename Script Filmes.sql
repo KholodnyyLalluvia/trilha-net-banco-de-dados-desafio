@@ -325,3 +325,79 @@ REFERENCES [dbo].[Generos] ([Id])
 GO
 ALTER TABLE [dbo].[FilmesGenero] CHECK CONSTRAINT [FK__FilmesGen__IdGen__2E1BDC42]
 GO
+
+
+
+USE Filmes;
+GO
+
+-- // 1 — Buscar o nome e ano dos filmes
+SELECT Nome, Ano
+FROM Filmes;
+
+-- // 2 — Buscar o nome e ano dos filmes, ordenados por ano (crescente)
+SELECT Nome, Ano
+FROM Filmes
+ORDER BY Ano ASC;
+
+-- // 3 — Buscar “De Volta para o Futuro”, trazendo nome, ano e duração
+SELECT Nome, Ano, Duracao
+FROM Filmes
+WHERE Nome = 'De Volta para o Futuro';
+
+-- // 4 — Buscar os filmes lançados em 1997
+SELECT Nome, Ano
+FROM Filmes
+WHERE Ano = 1997;
+
+-- // 5 — Buscar os filmes lançados após o ano 2000
+SELECT Nome, Ano
+FROM Filmes
+WHERE Ano > 2000;
+
+-- // 6 — Duração > 100 e < 150, ordenando pela duração (crescente)
+SELECT Nome, Duracao
+FROM Filmes
+WHERE Duracao > 100
+  AND Duracao < 150
+ORDER BY Duracao ASC;
+
+-- // 7 — Quantidade de filmes por ano (agrupado por ano, ordenando pela quantidade desc)
+SELECT Ano, COUNT(*) AS Quantidade
+FROM Filmes
+GROUP BY Ano
+ORDER BY Quantidade DESC;
+
+-- // 8 — Atores do gênero masculino (PrimeiroNome, UltimoNome)
+SELECT PrimeiroNome, UltimoNome
+FROM Atores
+WHERE Genero = 'M';
+
+-- // 9 — Atores do gênero feminino (PrimeiroNome, UltimoNome), ordenando por PrimeiroNome
+SELECT PrimeiroNome, UltimoNome
+FROM Atores
+WHERE Genero = 'F'
+ORDER BY PrimeiroNome ASC;
+
+-- // 10 — Nome do filme e o gênero
+SELECT f.Nome AS Filme, g.Genero AS Genero
+FROM Filmes AS f
+INNER JOIN FilmesGenero AS fg ON fg.IdFilme = f.Id
+INNER JOIN Generos AS g ON g.Id = fg.IdGenero;
+
+-- // 11 — Nome do filme e o gênero do tipo “Mistério”
+SELECT f.Nome AS Filme, g.Genero AS Genero
+FROM Filmes AS f
+INNER JOIN FilmesGenero AS fg ON fg.IdFilme = f.Id
+INNER JOIN Generos AS g ON g.Id = fg.IdGenero
+WHERE g.Genero = 'Mistério';
+
+-- // 12 — Nome do filme e os atores (PrimeiroNome, UltimoNome) e seu Papel
+SELECT f.Nome AS Filme,
+       a.PrimeiroNome,
+       a.UltimoNome,
+       ef.Papel
+FROM Filmes AS f
+INNER JOIN ElencoFilme AS ef ON ef.IdFilme = f.Id
+INNER JOIN Atores AS a ON a.Id = ef.IdAtor
+ORDER BY f.Nome, a.PrimeiroNome, a.UltimoNome;
